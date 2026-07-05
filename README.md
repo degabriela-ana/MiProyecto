@@ -99,3 +99,7 @@ Dataset: 5152 URLs (74 legítimas + 5078 phishing)
 - No confíes en emails sospechosos
 - Desconfía de urgencias artificiales
 
+AUTOR
+
+degabriela-ana - https://github.com/degabriela-ana
+
