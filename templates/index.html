@@ -645,7 +645,9 @@
     </div>
 
     <script>
-        const API_URL = 'http://localhost:5000/api/predict';
+        const API_URL = window.location.hostname === 'localhost' 
+    ? 'http://localhost:5000/api/predict'
+    : `${window.location.protocol}//${window.location.hostname}/api/predict`;
 
         function fillExample(url) {
             document.getElementById('urlInput').value = url;
