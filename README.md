@@ -51,6 +51,4 @@ Te muestra:
 - El porcentaje de confianza
 - Las probabilidades detalladas
 
----
 
-## Estructura del Proyecto
