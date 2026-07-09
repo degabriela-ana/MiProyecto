@@ -5,6 +5,8 @@ import os
 import pandas as pd
 from extract_features import extract_features
 import traceback
+from sklearn.ensemble import RandomForestClassifier
+import numpy as np
 
 app = Flask(__name__, template_folder='templates')
 CORS(app)
@@ -13,13 +15,64 @@ MODEL_LOADED = False
 model = None
 feature_names = None
 
-def train_model_if_needed():
-    """Entrena el modelo si no existe"""
+def create_simple_model():
+    """Crea un modelo simple sin necesidad de descargar datos"""
+    global MODEL_LOADED, model, feature_names
+    
+    print("🤖 Creando modelo simple...")
+    
+    try:
+        # Definir nombres de características (deben coincidir con extract_features.py)
+        feature_names = ['url_length', 'domain_length', 'dots_in_domain', 'dashes_in_domain',
+                        'subdomains', 'has_at_sign', 'has_ip', 'has_port', 'uses_https',
+                        'special_chars_count', 'has_digits_in_domain', 'path_length',
+                        'slashes_count', 'phishing_keywords', 'common_tld']
+        
+        # Crear datos de entrenamiento simple
+        X_train = np.array([
+            # URLs legítimas
+            [19, 10, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 2, 0, 1],
+            [20, 11, 1, 0, 0, 0, 0, 0, 1, 0, 0, 1, 3, 0, 1],
+            [25, 12, 1, 0, 0, 0, 0, 0, 1, 0, 0, 2, 3, 0, 1],
+            [18, 9, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 2, 0, 1],
+            [22, 13, 1, 0, 0, 0, 0, 0, 1, 0, 0, 1, 2, 0, 1],
+            
+            # URLs phishing
+            [50, 20, 2, 1, 1, 0, 0, 0, 0, 5, 1, 3, 5, 2, 0],
+            [45, 18, 3, 2, 2, 1, 0, 0, 0, 4, 1, 2, 4, 1, 0],
+            [55, 22, 2, 1, 1, 0, 0, 1, 0, 6, 0, 4, 6, 3, 0],
+            [48, 19, 3, 1, 1, 0, 1, 0, 0, 5, 1, 3, 5, 2, 0],
+            [52, 21, 2, 2, 1, 0, 0, 0, 0, 5, 0, 3, 5, 2, 0],
+        ])
+        
+        y_train = np.array([0, 0, 0, 0, 0, 1, 1, 1, 1, 1])
+        
+        # Entrenar modelo
+        model = RandomForestClassifier(n_estimators=50, max_depth=5, random_state=42)
+        model.fit(X_train, y_train)
+        
+        # Guardar
+        with open('phishing_detector_model.pkl', 'wb') as f:
+            pickle.dump(model, f)
+        
+        with open('feature_names.pkl', 'wb') as f:
+            pickle.dump(feature_names, f)
+        
+        MODEL_LOADED = True
+        print("✅ Modelo simple creado y guardado")
+        return True
+        
+    except Exception as e:
+        print(f"❌ Error creando modelo: {e}")
+        return False
+
+def load_or_create_model():
+    """Carga modelo existente o crea uno simple"""
     global MODEL_LOADED, model, feature_names
     
     print("🔍 Verificando modelo...")
     
-    # Si el modelo existe, cargarlo
+    # Intentar cargar
     if os.path.exists('phishing_detector_model.pkl') and os.path.exists('feature_names.pkl'):
         try:
             with open('phishing_detector_model.pkl', 'rb') as f:
@@ -32,40 +85,11 @@ def train_model_if_needed():
         except Exception as e:
             print(f"⚠️ Error cargando modelo: {e}")
     
-    # Si no existe, entrenar
-    print("⏳ Entrenando modelo (esto puede tomar unos minutos)...")
-    
-    try:
-        from fetch_datasets import combine_datasets
-        from extract_features import process_dataset
-        from train_model import train_model
-        
-        # 1. Descargar datos
-        print("📥 Descargando datos...")
-        combine_datasets()
-        
-        # 2. Extraer características
-        print("🔧 Extrayendo características...")
-        process_dataset('dataset_combined.csv', 'features_dataset.csv')
-        
-        # 3. Entrenar modelo
-        print("🤖 Entrenando modelo...")
-        model = train_model('features_dataset.csv')
-        
-        # 4. Cargar feature names
-        with open('feature_names.pkl', 'rb') as f:
-            feature_names = pickle.load(f)
-        
-        MODEL_LOADED = True
-        print("✅ Modelo entrenado y guardado correctamente")
-        
-    except Exception as e:
-        print(f"❌ Error entrenando modelo: {e}")
-        print(traceback.format_exc())
-        MODEL_LOADED = False
+    # Si no existe, crear uno simple
+    create_simple_model()
 
-# Entrenar modelo al iniciar
-train_model_if_needed()
+# Cargar o crear modelo al iniciar
+load_or_create_model()
 
 @app.route('/')
 def index():
@@ -83,7 +107,7 @@ def predict():
             return jsonify({'error': 'URL no proporcionada'}), 400
         
         if not MODEL_LOADED:
-            return jsonify({'error': 'Modelo no cargado. Intenta más tarde.'}), 500
+            return jsonify({'error': 'Modelo no cargado.'}), 500
         
         # Extraer características
         features = extract_features(url)
@@ -91,40 +115,3 @@ def predict():
         # Crear DataFrame con el orden correcto
         df = pd.DataFrame([features])
         df = df[feature_names]
-        
-        # Predecir
-        prediction = model.predict(df)[0]
-        probability = model.predict_proba(df)[0]
-        
-        result = "PHISHING" if prediction == 1 else "LEGÍTIMA"
-        confidence = float(probability[prediction] * 100)
-        
-        return jsonify({
-            'url': url,
-            'prediction': result,
-            'confidence': confidence,
-            'probability_legitimate': float(probability[0] * 100),
-            'probability_phishing': float(probability[1] * 100),
-            'status': 'success'
-        })
-    
-    except Exception as e:
-        print(f"Error: {e}")
-        print(traceback.format_exc())
-        return jsonify({
-            'error': f'Error procesando URL: {str(e)}',
-            'status': 'error'
-        }), 500
-
-@app.route('/api/health', methods=['GET'])
-def health():
-    """Verifica si el servidor está activo"""
-    return jsonify({
-        'status': 'ok',
-        'model_loaded': MODEL_LOADED
-    })
-
-if __name__ == '__main__':
-    print("\n🚀 Servidor iniciando...")
-    print("📖 Abre tu navegador en: http://localhost:5000")
-    app.run(debug=True, port=5000)
