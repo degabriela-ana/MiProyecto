@@ -1,35 +1,56 @@
-PHISHING URL DETECTOR CON IA
+# Detector de Phishing con IA
 
-Detector de URLs de phishing usando Machine Learning.
+Este proyecto es un detector de URLs que utiliza Machine Learning (Aprendizaje Automático) para identificar si un enlace es legítimo o un intento de phishing. La idea es simple: ingresas una URL y el modelo te dice si es segura o no.
 
-INSTALACION
+La aplicación está en la web y funciona 24/7, así que cualquiera puede usarla en cualquier momento.
 
-1. Clonar proyecto
-git clone https://github.com/degabriela-ana/MiProyecto.git
-cd MiProyecto
+---
 
-2. Crear entorno virtual
-python -m venv venv
+## ¿Qué es el Phishing?
 
-3. Activar entorno virtual
-Windows: venv\Scripts\activate.bat
-Mac/Linux: source venv/bin/activate
+El phishing es cuando alguien crea un sitio web falso que se parece al real (como un banco o PayPal) para robarte contraseñas o datos. Este detector ayuda a identificar esos intentos analizando características de la URL.
 
-4. Instalar dependencias
-pip install -r requirements.txt
+---
 
-ENTRENAR MODELO
+## Herramientas:
 
-python fetch_datasets.py
-python extract_features.py
-python train_model.py
+**Backend (Servidor):**
+- Python 3.9 - Lenguaje principal
+- Flask - Para crear la API (Interfaz de Programación de Aplicaciones) web
+- scikit-learn - Para entrenar el modelo de Machine Learning (Aprendizaje Automático)
+- pandas y numpy - Para manejar datos
 
-INICIAR SERVIDOR
+**Frontend (Página Web):**
+- HTML5, CSS3 y JavaScript - Para la página web
 
-python app.py
+**Deployment (Alojamiento):**
+- Vercel - Para que la app esté en internet
+- GitHub - Para guardar el código
 
-Abre: http://localhost:5000
+---
 
-AUTOR
+## ¿Cómo Funciona?
 
-degabriela-ana
+### Paso 1: Extracción de Características
+
+Cuando ingresas una URL, el sistema analiza cosas como:
+- ¿Tiene HTTPS (protocolo seguro)?
+- ¿Qué tan larga es?
+- ¿Tiene caracteres raros?
+- ¿El dominio se ve normal?
+- ¿Tiene una IP en lugar de un dominio?
+
+### Paso 2: Análisis con el Modelo
+
+El modelo de Machine Learning (Aprendizaje Automático) (entrenado con cientos de URLs) analiza todas esas características y calcula la probabilidad de que sea phishing o legítima.
+
+### Paso 3: Resultado
+
+Te muestra:
+- Si es PHISHING o LEGÍTIMA
+- El porcentaje de confianza
+- Las probabilidades detalladas
+
+---
+
+## Estructura del Proyecto
