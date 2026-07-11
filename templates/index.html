@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>🔒 Detector de Phishing - Verifica URLs</title>
+    <title>Detector de Phishing - Verifica URLs</title>
     <style>
         * {
             margin: 0;
@@ -13,30 +13,32 @@
 
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #00b4d8 0%, #0077b6 50%, #03045e 100%);
+            background: linear-gradient(135deg, #0b1a2b 0%, #1a3a5c 50%, #0b1a2b 100%);
             min-height: 100vh;
             padding: 20px;
+            color: #e8f2ff;
         }
 
         .navbar {
-            background: rgba(0, 119, 182, 0.95);
+            background: rgba(10, 26, 43, 0.95);
             padding: 15px 30px;
             border-radius: 10px;
             margin-bottom: 30px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
             display: flex;
             justify-content: space-between;
             align-items: center;
+            border: 1px solid rgba(75, 163, 255, 0.2);
         }
 
         .navbar-title {
-            color: white;
+            color: #e8f2ff;
             font-size: 24px;
             font-weight: 700;
         }
 
         .navbar-subtitle {
-            color: #90e0ef;
+            color: #8bd0ff;
             font-size: 12px;
         }
 
@@ -46,11 +48,12 @@
         }
 
         .main-card {
-            background: white;
+            background: rgba(18, 58, 111, 0.9);
             border-radius: 15px;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
             padding: 50px;
             margin-bottom: 30px;
+            border: 1px solid rgba(75, 163, 255, 0.15);
         }
 
         .header {
@@ -64,35 +67,36 @@
         }
 
         h1 {
-            color: #0077b6;
+            color: #8bd0ff;
             font-size: 32px;
             margin-bottom: 10px;
         }
 
         .header-description {
-            color: #666;
+            color: #b8d0ea;
             font-size: 16px;
             line-height: 1.6;
         }
 
         .input-section {
-            background: #f0f8ff;
+            background: rgba(26, 58, 92, 0.7);
             padding: 30px;
             border-radius: 10px;
             margin-bottom: 30px;
-            border: 2px solid #90e0ef;
+            border: 2px solid rgba(75, 163, 255, 0.3);
         }
 
         .input-label {
             display: block;
-            color: #0077b6;
+            color: #8bd0ff;
             font-weight: 700;
             font-size: 16px;
             margin-bottom: 15px;
+            text-transform: uppercase;
         }
 
         .input-description {
-            color: #555;
+            color: #b8d0ea;
             font-size: 13px;
             margin-bottom: 15px;
             line-height: 1.5;
@@ -106,25 +110,28 @@
         input[type="text"] {
             flex: 1;
             padding: 15px;
-            border: 2px solid #00b4d8;
+            border: 2px solid rgba(75, 163, 255, 0.4);
             border-radius: 8px;
             font-size: 15px;
+            background: rgba(11, 26, 43, 0.8);
+            color: #e8f2ff;
             transition: all 0.3s;
         }
 
         input[type="text"]:focus {
             outline: none;
-            border-color: #0077b6;
-            box-shadow: 0 0 10px rgba(0, 119, 182, 0.3);
+            border-color: #4aa3ff;
+            box-shadow: 0 0 10px rgba(74, 163, 255, 0.3);
+            background: rgba(11, 26, 43, 0.95);
         }
 
         input[type="text"]::placeholder {
-            color: #999;
+            color: #668aab;
         }
 
         button {
             padding: 15px 30px;
-            background: linear-gradient(135deg, #00b4d8 0%, #0077b6 100%);
+            background: linear-gradient(135deg, #4aa3ff 0%, #2a7fd9 100%);
             color: white;
             border: none;
             border-radius: 8px;
@@ -137,7 +144,8 @@
 
         button:hover {
             transform: translateY(-3px);
-            box-shadow: 0 10px 25px rgba(0, 119, 182, 0.4);
+            box-shadow: 0 10px 25px rgba(74, 163, 255, 0.4);
+            background: linear-gradient(135deg, #5ab0ff 0%, #3a8fe9 100%);
         }
 
         button:active {
@@ -145,7 +153,7 @@
         }
 
         button:disabled {
-            background: #ccc;
+            background: #556f7f;
             cursor: not-allowed;
             transform: none;
         }
@@ -161,8 +169,8 @@
         }
 
         .spinner {
-            border: 4px solid #f3f3f3;
-            border-top: 4px solid #00b4d8;
+            border: 4px solid rgba(75, 163, 255, 0.2);
+            border-top: 4px solid #4aa3ff;
             border-radius: 50%;
             width: 40px;
             height: 40px;
@@ -176,14 +184,14 @@
         }
 
         .loading-text {
-            color: #0077b6;
+            color: #8bd0ff;
             font-weight: 600;
         }
 
         .error {
-            background: #ffe5e5;
-            border: 2px solid #ff6b6b;
-            color: #d32f2f;
+            background: rgba(255, 80, 80, 0.15);
+            border: 2px solid #ff5050;
+            color: #ff9999;
             padding: 20px;
             border-radius: 8px;
             margin: 20px 0;
@@ -219,13 +227,15 @@
         }
 
         .result.safe {
-            background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%);
+            background: rgba(76, 175, 80, 0.15);
             border-left: 6px solid #4caf50;
+            border: 1px solid rgba(76, 175, 80, 0.3);
         }
 
         .result.danger {
-            background: linear-gradient(135deg, #ffebee 0%, #ffcdd2 100%);
+            background: rgba(244, 67, 54, 0.15);
             border-left: 6px solid #f44336;
+            border: 1px solid rgba(244, 67, 54, 0.3);
         }
 
         .result-header {
@@ -245,21 +255,22 @@
         }
 
         .result.safe .result-title {
-            color: #2e7d32;
+            color: #66bb6a;
         }
 
         .result.danger .result-title {
-            color: #c62828;
+            color: #ef5350;
         }
 
         .result-url {
-            background: rgba(0, 0, 0, 0.05);
+            background: rgba(0, 0, 0, 0.2);
             padding: 15px;
             border-radius: 5px;
             margin-bottom: 20px;
             font-size: 13px;
             word-break: break-all;
-            color: #333;
+            color: #b8d0ea;
+            border: 1px solid rgba(75, 163, 255, 0.15);
         }
 
         .result-description {
@@ -269,11 +280,11 @@
         }
 
         .result.safe .result-description {
-            color: #1b5e20;
+            color: #8ed4a8;
         }
 
         .result.danger .result-description {
-            color: #b71c1c;
+            color: #f0a8a8;
         }
 
         .confidence-section {
@@ -287,24 +298,25 @@
         }
 
         .result.safe .confidence-label {
-            color: #2e7d32;
+            color: #66bb6a;
         }
 
         .result.danger .confidence-label {
-            color: #c62828;
+            color: #ef5350;
         }
 
         .confidence-bar {
-            background: rgba(0, 0, 0, 0.1);
+            background: rgba(0, 0, 0, 0.2);
             border-radius: 10px;
             height: 25px;
             overflow: hidden;
             position: relative;
+            border: 1px solid rgba(75, 163, 255, 0.15);
         }
 
         .confidence-fill {
             height: 100%;
-            background: linear-gradient(90deg, #00b4d8 0%, #0077b6 100%);
+            background: linear-gradient(90deg, #4aa3ff 0%, #2a7fd9 100%);
             transition: width 0.6s ease;
             display: flex;
             align-items: center;
@@ -322,22 +334,22 @@
         }
 
         .probability-item {
-            background: rgba(0, 0, 0, 0.05);
+            background: rgba(26, 58, 92, 0.5);
             padding: 20px;
             border-radius: 8px;
             text-align: center;
-            border: 2px solid transparent;
+            border: 1px solid rgba(75, 163, 255, 0.2);
             transition: all 0.3s;
         }
 
         .probability-item:hover {
-            border-color: #00b4d8;
-            background: rgba(0, 180, 216, 0.1);
+            border-color: #4aa3ff;
+            background: rgba(26, 58, 92, 0.7);
         }
 
         .probability-label {
             font-size: 13px;
-            color: #666;
+            color: #b8d0ea;
             margin-bottom: 10px;
             font-weight: 600;
         }
@@ -345,41 +357,40 @@
         .probability-value {
             font-size: 32px;
             font-weight: 700;
-            background: linear-gradient(135deg, #00b4d8 0%, #0077b6 100%);
+            background: linear-gradient(135deg, #4aa3ff 0%, #2a7fd9 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
         }
 
         .recommendation {
-            background: rgba(0, 119, 182, 0.1);
+            background: rgba(74, 163, 255, 0.1);
             padding: 15px;
             border-radius: 8px;
-            border-left: 4px solid #0077b6;
+            border-left: 4px solid #4aa3ff;
             font-size: 14px;
             line-height: 1.6;
+            color: #b8d0ea;
         }
 
         .recommendation strong {
-            color: #0077b6;
+            color: #8bd0ff;
         }
 
         .tips-section {
-            background: #f0f8ff;
+            background: rgba(18, 58, 111, 0.9);
             padding: 30px;
             border-radius: 10px;
             margin-bottom: 30px;
-            border: 2px solid #90e0ef;
+            border: 1px solid rgba(75, 163, 255, 0.15);
         }
 
         .tips-title {
-            color: #0077b6;
+            color: #8bd0ff;
             font-weight: 700;
             font-size: 18px;
             margin-bottom: 20px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
+            text-transform: uppercase;
         }
 
         .tips-grid {
@@ -389,10 +400,11 @@
         }
 
         .tip-card {
-            background: white;
+            background: rgba(26, 58, 92, 0.6);
             padding: 15px;
             border-radius: 8px;
-            border-left: 4px solid #00b4d8;
+            border-left: 4px solid #4aa3ff;
+            border: 1px solid rgba(75, 163, 255, 0.2);
         }
 
         .tip-icon {
@@ -402,32 +414,30 @@
 
         .tip-title {
             font-weight: 700;
-            color: #0077b6;
+            color: #8bd0ff;
             margin-bottom: 5px;
             font-size: 14px;
         }
 
         .tip-text {
-            color: #666;
+            color: #b8d0ea;
             font-size: 13px;
             line-height: 1.5;
         }
 
         .examples-section {
-            background: white;
+            background: rgba(18, 58, 111, 0.9);
             padding: 30px;
             border-radius: 10px;
-            border: 2px solid #90e0ef;
+            border: 1px solid rgba(75, 163, 255, 0.15);
         }
 
         .examples-title {
-            color: #0077b6;
+            color: #8bd0ff;
             font-weight: 700;
             font-size: 18px;
             margin-bottom: 20px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
+            text-transform: uppercase;
         }
 
         .examples-grid {
@@ -438,9 +448,9 @@
 
         .example-btn {
             padding: 12px 16px;
-            background: white;
-            border: 2px solid #00b4d8;
-            color: #0077b6;
+            background: rgba(26, 58, 92, 0.7);
+            border: 2px solid #4aa3ff;
+            color: #8bd0ff;
             border-radius: 8px;
             cursor: pointer;
             font-weight: 600;
@@ -450,15 +460,15 @@
         }
 
         .example-btn:hover {
-            background: #00b4d8;
+            background: #4aa3ff;
             color: white;
             transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(0, 180, 216, 0.3);
+            box-shadow: 0 5px 15px rgba(74, 163, 255, 0.4);
         }
 
         .footer {
             text-align: center;
-            color: rgba(255, 255, 255, 0.8);
+            color: rgba(232, 242, 255, 0.6);
             margin-top: 40px;
             font-size: 13px;
         }
@@ -504,21 +514,18 @@
 
     <div class="container">
         <div class="main-card">
-            <!-- HEADER -->
             <div class="header">
                 <div class="header-icon">🛡️</div>
                 <h1>¿Es esta URL segura?</h1>
                 <p class="header-description">
-                    Utiliza nuestra herramienta de IA para detectar URLs fraudulentas y protégete del phishing.
-                    Simplemente copia y pega la URL que deseas verificar.
+                    Utilice esta herramienta para detectar URLs fraudulentas y protégete del phishing. Simplemente copia y pega la URL que deseas verificar.
                 </p>
             </div>
 
-            <!-- INPUT SECTION -->
             <div class="input-section">
-                <label class="input-label">Ingresa la URL a verificar:</label>
+                <label class="input-label">INGRESE LA URL QUE QUIERE VERIFICAR:</label>
                 <p class="input-description">
-                    📋 Copia la URL completa de tu navegador y pégala aquí. Ejemplo: https://www.google.com
+                    Copie la URL completa de su navegador y péguelo aquí. Ejemplo: https://www.google.com
                 </p>
                 <div class="input-group">
                     <input 
@@ -531,16 +538,13 @@
                 </div>
             </div>
 
-            <!-- LOADING -->
             <div class="loading" id="loading">
                 <div class="spinner"></div>
                 <p class="loading-text">Analizando la URL con IA...</p>
             </div>
 
-            <!-- ERROR -->
             <div class="error" id="error"></div>
 
-            <!-- RESULT -->
             <div class="result" id="result">
                 <div class="result-header">
                     <span class="result-icon" id="resultIcon"></span>
@@ -562,11 +566,11 @@
 
                 <div class="probabilities">
                     <div class="probability-item">
-                        <div class="probability-label">✅ Probabilidad de ser Legítima</div>
+                        <div class="probability-label">Probabilidad de ser Legítima</div>
                         <div class="probability-value" id="probLegitimate">0%</div>
                     </div>
                     <div class="probability-item">
-                        <div class="probability-label">⚠️ Probabilidad de ser Phishing</div>
+                        <div class="probability-label">Probabilidad de ser Phishing</div>
                         <div class="probability-value" id="probPhishing">0%</div>
                     </div>
                 </div>
@@ -575,9 +579,8 @@
             </div>
         </div>
 
-        <!-- TIPS SECTION -->
         <div class="tips-section">
-            <div class="tips-title">💡 Consejos para evitar Phishing</div>
+            <div class="tips-title">CONSEJOS PARA EVITAR PHISHING</div>
             <div class="tips-grid">
                 <div class="tip-card">
                     <div class="tip-icon">🔍</div>
@@ -612,9 +615,8 @@
             </div>
         </div>
 
-        <!-- EXAMPLES SECTION -->
         <div class="examples-section">
-            <div class="examples-title">🧪 Prueba con estos ejemplos:</div>
+            <div class="examples-title">PRUEBA CON ESTOS EJEMPLOS:</div>
             <div class="examples-grid">
                 <button class="example-btn" onclick="fillExample('https://www.google.com')">
                     ✅ Google (Seguro)
@@ -637,17 +639,16 @@
             </div>
         </div>
 
-        <!-- FOOTER -->
         <div class="footer">
-            <p>🔐 Detector de Phishing con IA | Tu privacidad es importante</p>
+            <p>Detector de Phishing con IA | Tu privacidad es importante</p>
             <p style="margin-top: 10px; opacity: 0.7;">Análisis basado en Machine Learning</p>
         </div>
     </div>
 
     <script>
         const API_URL = window.location.hostname === 'localhost' 
-    ? 'http://localhost:5000/api/predict'
-    : `${window.location.protocol}//${window.location.hostname}/api/predict`;
+            ? 'http://localhost:5000/api/predict'
+            : `${window.location.protocol}//${window.location.hostname}/api/predict`;
 
         function fillExample(url) {
             document.getElementById('urlInput').value = url;
@@ -660,17 +661,16 @@
             const resultDiv = document.getElementById('result');
             const loadingDiv = document.getElementById('loading');
 
-            // Limpiar
             errorDiv.classList.remove('show');
             resultDiv.classList.remove('show');
 
             if (!url) {
-                showError('❌ Por favor ingresa una URL antes de analizar');
+                showError('Por favor ingresa una URL antes de analizar');
                 return;
             }
 
             if (!url.includes('.')) {
-                showError('❌ Por favor ingresa una URL válida (ej: https://www.google.com)');
+                showError('Por favor ingresa una URL válida (ej: https://www.google.com)');
                 return;
             }
 
@@ -690,7 +690,7 @@
                 loadingDiv.classList.remove('show');
 
                 if (data.status === 'error') {
-                    showError('❌ ' + data.error);
+                    showError(data.error);
                     return;
                 }
 
@@ -698,7 +698,7 @@
 
             } catch (error) {
                 loadingDiv.classList.remove('show');
-                showError('❌ No se puede conectar con el servidor. Verifica que esté activo (python app.py)');
+                showError('No se puede conectar con el servidor. Intenta más tarde.');
                 console.error('Error:', error);
             }
         }
@@ -717,31 +717,26 @@
             const isPhishing = data.prediction === 'PHISHING';
             const isSafe = data.prediction === 'LEGÍTIMA';
 
-            // Actualizar clases
             resultDiv.classList.remove('safe', 'danger');
             resultDiv.classList.add(isSafe ? 'safe' : 'danger');
 
-            // Contenido
             resultIcon.textContent = isPhishing ? '⚠️' : '✅';
             resultTitle.textContent = isPhishing ? 'ALERTA: PHISHING DETECTADO' : 'URL SEGURA Y CONFIABLE';
             resultUrl.textContent = `URL: ${data.url}`;
             
             resultDescription.textContent = isPhishing 
-                ? '🚨 Este análisis indica que esta URL podría ser un intento de phishing. Se recomienda NO hacer clic en ella. Podría intentar robar tus datos personales o contraseñas.'
-                : '✅ Este análisis indica que esta URL es segura y confiable. Sin embargo, siempre mantén la precaución en internet.';
+                ? 'Este análisis indica que esta URL podría ser un intento de phishing. Se recomienda NO hacer clic en ella. Podría intentar robar tus datos personales o contraseñas.'
+                : 'Este análisis indica que esta URL es segura y confiable. Sin embargo, siempre mantén la precaución en internet.';
 
-            // Confianza
             confidenceFill.style.width = data.confidence + '%';
             confidenceFill.textContent = data.confidence.toFixed(1) + '%';
 
-            // Probabilidades
             probLegitimate.textContent = data.probability_legitimate.toFixed(1) + '%';
             probPhishing.textContent = data.probability_phishing.toFixed(1) + '%';
 
-            // Recomendación
             if (isPhishing) {
                 recommendation.innerHTML = `
-                    <strong>🚫 Recomendación:</strong><br>
+                    <strong>Recomendación:</strong><br>
                     NO hagas clic en esta URL. Si la recibiste por email:
                     <ul style="margin: 10px 0 0 20px; line-height: 1.8;">
                         <li>Reporta el email como phishing/spam</li>
@@ -752,7 +747,7 @@
                 `;
             } else {
                 recommendation.innerHTML = `
-                    <strong>✅ Recomendación:</strong><br>
+                    <strong>Recomendación:</strong><br>
                     Esta URL parece segura, pero recuerda: <strong>nunca</strong> ingreses datos sensibles en sitios sospechosos,
                     incluso si el análisis dice que es seguro. Mantén siempre la precaución.
                 `;
